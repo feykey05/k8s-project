@@ -1,20 +1,19 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "web1-demo"
-    }
-
     stages {
-        stage('Build Docker Image') {
+        stage('Checkout') {
             steps {
-                sh 'docker build -t $IMAGE_NAME ./app'
+                echo 'Repo checked out'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/web1'
+                sh '''
+                kubectl apply -f k8s/web1/deployment.yaml
+                kubectl apply -f k8s/web1/service.yaml
+                '''
             }
         }
     }
